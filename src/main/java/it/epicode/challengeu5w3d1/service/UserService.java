@@ -1,6 +1,7 @@
 package it.epicode.challengeu5w3d1.service;
 
 import it.epicode.challengeu5w3d1.dto.UserDto;
+import it.epicode.challengeu5w3d1.exception.AlreadyExistException;
 import it.epicode.challengeu5w3d1.exception.NotFoundException;
 import it.epicode.challengeu5w3d1.model.User;
 import it.epicode.challengeu5w3d1.repository.UserRepository;
@@ -14,8 +15,15 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-public User saveUser(UserDto userDto){
+public User saveUser(UserDto userDto) throws AlreadyExistException {
+
     User user= new User();
+    if(userRepository.existsByUsername(userDto.getUsername())) {
+        throw new AlreadyExistException("Username già esistente");
+    }
+    if(userRepository.existsByEmail(userDto.getEmail())) {
+        throw new AlreadyExistException("email già esistente");
+    }
     user.setNome(userDto.getNome());
     user.setCognome(userDto.getCognome());
     user.setUsername(userDto.getUsername());

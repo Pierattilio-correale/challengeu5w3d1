@@ -2,6 +2,7 @@ package it.epicode.challengeu5w3d1.controller;
 
 import it.epicode.challengeu5w3d1.dto.LoginDto;
 import it.epicode.challengeu5w3d1.dto.UserDto;
+import it.epicode.challengeu5w3d1.exception.AlreadyExistException;
 import it.epicode.challengeu5w3d1.exception.NotFoundException;
 import it.epicode.challengeu5w3d1.exception.ValidationException;
 import it.epicode.challengeu5w3d1.model.User;
@@ -23,7 +24,7 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/auth/register")
-    public User register(@RequestBody  @Validated  UserDto userDto, BindingResult bindingResult) throws ValidationException {
+    public User register(@RequestBody  @Validated  UserDto userDto, BindingResult bindingResult) throws ValidationException, AlreadyExistException {
         if(bindingResult.hasErrors()){
             throw new ValidationException(bindingResult.getAllErrors().stream().map(objectError -> objectError.getDefaultMessage()).reduce("",(s,e)->s+e));
         }
@@ -35,7 +36,7 @@ public class AuthController {
         if(bindingResult.hasErrors()){
             throw new ValidationException(bindingResult.getAllErrors().stream().map(objectError -> objectError.getDefaultMessage()).reduce("",(s,e)->s+e));
         }
-        
+
 
 return authService.login(loginDto);
     }
